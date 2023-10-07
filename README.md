@@ -1,16 +1,46 @@
-# app
+Sample app which replicates the problem described in: https://github.com/flutter/flutter/issues/136054.
 
-A new Flutter project.
+## Reproduction
 
-## Getting Started
+1. Create a new flutter project: `flutter create app`
+2. In the Android Platform code, create a custom `FlutterApplication`:
 
-This project is a starting point for a Flutter application.
+```kotlin
+import io.flutter.app.FlutterApplication
+import io.flutter.embedding.engine.FlutterEngineGroup
 
-A few resources to get you started if this is your first Flutter project:
+class App : FlutterApplication() {
+    lateinit var engines: FlutterEngineGroup
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+    override fun onCreate() {
+        super.onCreate()
+        engines = FlutterEngineGroup(this);
+    }
+}
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. In the activity, use the engine group to create `provideFlutterEngine`:
+
+```kotlin
+import android.content.Context
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+
+class MainActivity: FlutterActivity() {
+    override fun provideFlutterEngine(context: Context): FlutterEngine? {
+        val app = context.applicationContext as App
+        return app.engines.createAndRunDefaultEngine(context);
+    }
+}
+```
+
+4. In your `AndroidManifest.xml`, use the custom application:
+
+```xml
+    <application
+        android:label="app"
+        android:name=".App"
+        android:icon="@mipmap/ic_launcher">
+```
+
+5. Run the app in the app in profile `flutter run --profile`
