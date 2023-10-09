@@ -123,3 +123,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+@pragma('vm:entry-point')
+void runContentProvider() {
+  WidgetsFlutterBinding.ensureInitialized();
+  print("Content Provider Dart Entrypoint Started");
+}

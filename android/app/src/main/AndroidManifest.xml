@@ -3,6 +3,10 @@
         android:label="app"
         android:name=".App"
         android:icon="@mipmap/ic_launcher">
+        <provider
+            android:name=".ExampleContentProvider"
+            android:authorities="${applicationId}.ExampleContentProvider">
+        </provider>
         <activity
             android:name=".MainActivity"
             android:exported="true"
